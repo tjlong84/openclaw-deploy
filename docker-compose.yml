@@ -1,0 +1,26 @@
+services:
+  openclaw:
+    image: openclaw-fresh:local
+    container_name: openclaw-v2
+    restart: unless-stopped
+    init: true
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      NODE_ENV: production
+    volumes:
+      # State directory (openclaw config, auth, agent state)
+      # mounted as both legacy .clawdbot and new .openclaw so migration warning is non-blocking
+      - ./state:/home/node/.clawdbot
+      - ./state:/home/node/.openclaw
+      # Workspace (V2 app code + agent knowledge files)
+      - ./workspace:/home/node/clawd
+      # Supervisor program configs (hot-reloadable without image rebuild)
+      - ./supervisor:/etc/supervisor/conf.d
+      # Cloudflared credentials (separate from state to allow read-only mount if desired)
+      - ./state/cloudflared/etc:/etc/cloudflared
+    ports:
+      - "${GATEWAY_HOST_PORT:-18789}:18789"
+      - "${BRIDGE_HOST_PORT:-18790}:18790"
+      - "${FRONTEND_HOST_PORT:-4174}:4174"
+      - "${BACKEND_HOST_PORT:-8788}:8788"

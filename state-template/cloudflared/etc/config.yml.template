@@ -1,0 +1,20 @@
+# Cloudflared tunnel config
+# Copy to state/cloudflared/etc/config.yml and fill in your values.
+#
+# tunnel:          Your tunnel UUID from `cloudflared tunnel list`
+# credentials-file: Path inside the container; filename must match tunnel UUID
+# ingress:         Route rules — edit hostnames to match your Cloudflare zone
+
+tunnel: YOUR_TUNNEL_UUID
+credentials-file: /etc/cloudflared/YOUR_TUNNEL_UUID.json
+
+ingress:
+  # Route /api/* to the V2 Fastify backend
+  - hostname: YOUR_DOMAIN
+    path: /api/*
+    service: http://127.0.0.1:8788
+  # Route everything else to the V2 frontend
+  - hostname: YOUR_DOMAIN
+    service: http://127.0.0.1:4174
+  # Catch-all (required by cloudflared)
+  - service: http_status:404

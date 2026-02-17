@@ -1,0 +1,19 @@
+# --- Personal state (NEVER commit) ---
+state/
+!state-template/
+
+# Tunnel credentials
+*.json
+!state-template/**/*.json
+
+# Env files with real values
+*.env
+!*.env.template
+!*.env.example
+
+# Docker build cache
+.docker/
+
+# Editor
+.DS_Store
+Thumbs.db
