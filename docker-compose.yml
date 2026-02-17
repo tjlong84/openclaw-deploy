@@ -13,7 +13,11 @@ services:
       # mounted as both legacy .clawdbot and new .openclaw so migration warning is non-blocking
       - ./state:/home/node/.clawdbot
       - ./state:/home/node/.openclaw
-      # Workspace (V2 app code + agent knowledge files)
+      # Git identity + credentials (persisted in state dir, not in the image)
+      # state/.gitconfig and state/.git-credentials are gitignored from the workspace repo
+      - ./state/.gitconfig:/home/node/.gitconfig
+      - ./state/.git-credentials:/home/node/.git-credentials
+      # Workspace (V2 app code + agent knowledge files — tracked in separate git repo)
       - ./workspace:/home/node/clawd
       # Supervisor program configs (hot-reloadable without image rebuild)
       - ./supervisor:/etc/supervisor/conf.d
